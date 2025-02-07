@@ -1,6 +1,7 @@
 import { Post, User } from "@shared/schema";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
 
 interface PostCardProps {
   post: Post & { author: User };
@@ -8,28 +9,38 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   return (
-    <Card className="overflow-hidden">
-      {post.imageUrl && (
-        <div className="aspect-video relative">
-          <img
-            src={post.imageUrl}
-            alt={post.title}
-            className="object-cover w-full h-full"
-          />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <Card className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow duration-200">
+        <div className="aspect-[4/3] relative overflow-hidden">
+          {post.imageUrl ? (
+            <img
+              src={post.imageUrl}
+              alt={post.title}
+              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
+            />
+          ) : (
+            <div className="w-full h-full bg-muted flex items-center justify-center">
+              <span className="text-muted-foreground">No image available</span>
+            </div>
+          )}
         </div>
-      )}
-      <CardHeader className="flex flex-row items-center gap-4">
-        <div>
-          <h3 className="font-semibold text-lg">{post.title}</h3>
+        <div className="p-4">
+          <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
+            {post.title}
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Shared by {post.author.username}
+          </p>
           <p className="text-sm text-muted-foreground">
-            by {post.author.username} on{" "}
             {format(new Date(post.createdAt), "MMM d, yyyy")}
           </p>
+          <p className="mt-2 text-sm line-clamp-2">{post.content}</p>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="prose" dangerouslySetInnerHTML={{ __html: post.content }} />
-      </CardContent>
-    </Card>
+      </Card>
+    </motion.div>
   );
 }
