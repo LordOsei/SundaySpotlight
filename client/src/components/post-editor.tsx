@@ -37,7 +37,7 @@ export function PostEditor() {
       form.reset();
       toast({
         title: "Success",
-        description: "Post created successfully",
+        description: "Your brunch spot has been shared!",
       });
     },
     onError: (error: Error) => {
@@ -60,9 +60,9 @@ export function PostEditor() {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>Spot Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="e.g. The Breakfast Klub" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,7 +75,7 @@ export function PostEditor() {
             <FormItem>
               <FormLabel>Image URL (optional)</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Add a photo of your favorite dish" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -86,16 +86,20 @@ export function PostEditor() {
           name="content"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Content</FormLabel>
+              <FormLabel>Tell us about it</FormLabel>
               <FormControl>
-                <Textarea {...field} rows={10} />
+                <Textarea 
+                  {...field} 
+                  rows={10} 
+                  placeholder="What makes this spot special? What's your favorite dish? Any tips for first-timers?" 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={createPostMutation.isPending}>
-          Create Post
+        <Button type="submit" className="w-full" disabled={createPostMutation.isPending}>
+          Share Spot
         </Button>
       </form>
     </Form>
