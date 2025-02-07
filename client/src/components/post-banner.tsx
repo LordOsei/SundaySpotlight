@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Post, User } from "@shared/schema";
-import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { format } from "date-fns";
 
