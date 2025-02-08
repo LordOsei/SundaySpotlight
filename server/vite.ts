@@ -70,8 +70,31 @@ export async function setupVite(app: Express, server: Server) {
   });
 }
 
+export async function createServer() {
+  const app = express();
+
+  // ...existing code...
+
+  app.use(async (req, res, next) => {
+    try {
+      const url = req.originalUrl;
+      const clientTemplate = path.resolve(__dirname, 'index.html');
+      let template = await fs.promises.readFile(clientTemplate, 'utf-8');
+      template = template.replace(
+        `src="/src/main.tsx"`,
+        `src="/src/main.tsx?v=${nanoid()}"`,
+      );
+      const page = await vite.transformIndexHtml(url, template);
+      res.status(200).set({ 'Content-Type': 'text/html' }).end(page);
+    } catch (e) {
+      vite.ssrFixStacktrace(e as Error);
+      next(e);
+    }
+  });
+}
+
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "public");
+  const distPath = path.resolve(__dirname, '../client/dist');
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
